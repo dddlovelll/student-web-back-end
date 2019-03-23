@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.PostLikeDao">
+
+
+    <resultMap type="PostLike" id="PostLikeResult">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+    <!--PostLikeResult-->
+    <resultMap type="PostLikeResult" id="PostLikeResult2">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="createTime" column="create_time"/>
+        <association property="nickName" column="user_id"
+                     select="com.qmkl.dao.UserDao.getNickNameById"></association>
+    </resultMap>
+
+
+    <!--      List<PostLikeResult> listLikeMe(@Param("start")Integer start,@Param("num")Integer num,@Param("postIdList")List<Integer> postIdList);-->
+    <select id="listLikeMe" resultMap="PostLikeResult2">
+        select * from post_like where  post_id in
+        <foreach collection="postIdList" item="postId" index="index"
+                 open="(" close=")" separator=",">
+            #{postId}
+        </foreach>
+        and state = true
+        order by create_time desc limit #{start},#{num}
+    </select>
+
+
+
+
+<!--    void addPostLike(@Param("postLike") PostLike postLike);-->
+    <insert id="addPostLike">
+         insert into post_like (user_id,post_id,create_time,state) values (#{postLike.userId},#{postLike.postId},#{postLike.createTime},#{postLike.state});
+    </insert>
+
+
+    <!--    void updatePostLike(@Param("userId") Integer userId,@Param("postId") Integer postId);-->
+    <update id="updatePostLike">
+        update post_like set state = ! state where user_id = #{userId} and post_id = #{postId}
+    </update>
+
+
+    <!-- boolean isLike(@Param("userId") Integer userId,@Param("postId") Integer postId);-->
+    <select id="isLike" resultType="boolean">
+        select state from  post_like where user_id = #{userId} and post_id = #{postId}
+    </select>
+
+    <!--PostLike get(@Param("userId") Integer userId,@Param("postId") Integer postId);-->
+    <select id="get" resultMap="PostLikeResult">
+        select * from  post_like where user_id = #{userId} and post_id = #{postId}
+    </select>
+
+
+</mapper> 

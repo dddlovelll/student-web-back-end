@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.CollegeDao">
+
+    <!-- public String selectCollegeNameById(Integer id);//通过id查找College名字-->
+    <select id="selectCollegeNameById" parameterType="Integer" resultType="String">
+        select name from colleges where id=#{id}
+    </select>
+    <!--public Integer selectIdByCollegeName(String collegeName);//通过College名字查找id-->
+    <select id="selectIdByCollegeName" parameterType="String" resultType="Integer">
+        select id from colleges where name=#{collegeName}
+    </select>
+
+    <!-- List<String> listAllName(); //列举所有的学校-->
+    <select id="listAllName" resultType="String">
+        select name from  colleges
+    </select>
+
+    <!-- public College selectCollegeById(Integer id);//通过id查找College-->
+    <select id="selectCollegeById" parameterType="Integer" resultType="College">
+      select * from colleges where id=#{id}
+  </select>
+
+    <!--public void insertCollege(College college);//插入College-->
+    <insert id="insertCollege">
+        insert into colleges values (#{id},#{name},#{createdAt},#{updatedAt})
+    </insert>
+
+
+    <!--  public void updateCollege(College college);//更新College-->
+    <update id="updateCollege">
+        update colleges set name=#{name},createdAt=#{createdAt},updatedAt=#{updatedAt} where id=#{id}
+    </update>
+
+</mapper> 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.PostDao">
+
+    <resultMap type="PostResult" id="PostResult">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="likeNum" column="like_num"/>
+        <result property="commentNum" column="comment_num"/>
+        <result property="classify" column="classify"/>
+        <result property="reportNum" column="report_num"/>
+        <association property="nickName" column="user_id"
+                     select="com.qmkl.dao.UserDao.getNickNameById"></association>
+    </resultMap>
+
+    <!--    void addPost(Post post);-->
+    <insert id="addPost">
+        insert into post (user_id,content,create_time,like_num,comment_num,classify) values (#{post.userId},#{post.content},#{post.createTime},#{post.likeNum},#{post.commentNum},#{post.classify});
+    </insert>
+
+    <delete id="delById">
+        delete from post where id = #{postId}
+    </delete>
+
+    <!--   List<Post> listPostWithPage(@Param("start")Integer start,@Param("num")Integer num);-->
+    <select id="listPostWithPage" resultMap="PostResult">
+        select * from  post where  report_num &lt; 11 order by create_time desc limit #{start},#{num}
+    </select>
+
+    <select id="listPostWithPageWithClassify" resultMap="PostResult">
+        select * from  post where classify = #{classify} and report_num &lt; 11 order by create_time desc limit #{start},#{num}
+    </select>
+
+   <!-- List<Post> listPostWithPageByUserId(@Param("start")Integer start,@Param("num")Integer num,@Param("userId")Integer userId);-->
+    <select id="listPostWithPageByUserId" resultMap="PostResult">
+        select * from  post where user_id = #{userId} and report_num &lt; 11  order by create_time desc limit #{start},#{num}
+    </select>
+
+
+
+    <!--   void updatePostCommentNum(Integer postId);-->
+    <update id="updatePostCommentNum">
+        update post set comment_num = comment_num +1 where id = #{postId}
+    </update>
+
+    <!--    void updatePostAddLikeNum(Integer postId);-->
+    <update id="updatePostAddLikeNum">
+        update post set like_num = like_num +1 where id = #{postId}
+    </update>
+
+    <!--      void updatePostDescLikeNum(Integer postId);-->
+    <update id="updatePostDescLikeNum">
+        update post set like_num = like_num - 1 where id = #{postId}
+    </update>
+    <update id="updatePostAddReportNum">
+        update post set report_num = report_num + 1 where id = #{postId}
+    </update>
+
+    <!-- PostResult getById(Integer postId);-->
+    <select id="getById" resultMap="PostResult">
+        select * from  post where id = #{postId}
+    </select>
+
+    <!--    List<Integer> getAllPostIdByUserId(Integer userId);-->
+    <select id="getAllPostIdByUserId" resultType="Integer">
+        select id from post where user_id = #{userId}
+    </select>
+
+
+
+</mapper> 

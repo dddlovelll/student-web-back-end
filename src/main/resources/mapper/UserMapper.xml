@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.UserDao">
+
+
+    <resultMap type="User" id="UserResult">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="gender" column="gender"/>
+        <result property="enterYear" column="enterYear"/>
+        <result property="avatar" column="avatar"/>
+        <result property="phone" column="phone"/>
+        <association property="college" column="CollegeId"
+                     select="com.qmkl.dao.CollegeDao.selectCollegeNameById"></association>
+        <association property="academy" column="AcademyId"
+                     select="com.qmkl.dao.AcademyDao.selectAcademyNameById"></association>
+    </resultMap>
+
+
+    <!-- User getUserByUsernameAndPassword(@Param("username")String username, @Param("password")String password); // 通过账号密码查找用户-->
+    <select id="getUserByUsernameAndPassword" resultMap="UserResult">
+        select *from users where username = #{username} and password =#{password}
+    </select>
+<!--    User getUserByToken(String token); // 通过token查询用户-->
+    <select id="getUserByToken" resultMap="UserResult">
+           select *from users where token = #{token}
+    </select>
+
+    <!--    String getNickNameById(String token);-->
+    <select id="getNickNameById" resultType="String">
+           select nickname from users  where id = #{id}
+    </select>
+
+    <!--    Integer getUserIdByToken(String token);  // 通过token得到用户id-->
+    <select id="getUserIdByToken" resultType="Integer">
+        select id from users  where token = #{token}
+    </select>
+
+
+    <!-- public User selectUserById(Integer id);//通过id查找用户-->
+    <select id="selectUserById" parameterType="Integer" resultMap="UserResult">
+      select id,username,nickname,gender,enterYear,avatar,phone,CollegeId,AcademyId from users where id=#{id}
+  </select>
+
+    <!--public User selectUserByUsername(String username);//通过用户名查找用户-->
+    <select id="selectUserByUsername" parameterType="String" resultMap="UserResult">
+      select id,username,nickname,gender,enterYear,avatar,phone,CollegeId,AcademyId from users where username=#{username}
+    </select>
+
+    <!--public User selectUserByNickname(String nickname);//通过昵称查找用户-->
+    <select id="selectUserByNickname" parameterType="String" resultMap="UserResult">
+        select id,username,nickname,gender,enterYear,avatar,phone,CollegeId,AcademyId from users where nickname=#{nickname}
+    </select>
+
+
+    <!--public User selectUserByPhone(String phone);//通过手机号查找用户-->
+    <select id="selectUserByPhone" parameterType="String" resultMap="UserResult">
+        select id,username,nickname,gender,enterYear,avatar,phone,CollegeId,AcademyId from users where phone=#{phone}
+    </select>
+
+    <!-- public Integer selectUserByUsernameAndPassword(@Param("username")String username,@Param("password")String password);//通过账号密码查找用户-->
+    <select id="selectUserByUsernameAndPassword" resultType="Integer">
+        select id from users where username=#{username} and password=#{password}
+    </select>
+
+    <!--String getUsernameByToken(String token);  // 通过token得到用户名-->
+    <select id="getUsernameByToken" resultType="String">
+        select username from users where token = #{token}
+    </select>
+
+    <!-- String getUsernameById(Integer id);  // 通过id得到用户名-->
+    <select id="getUsernameById" resultType="String">
+         select nickname from users where id = #{id}
+    </select>
+    <!--public String insertUser(@Param("user") User user,@Param("collegeId") Integer collegeId,@Param("academyId") Integer academyId);//插入用户-->
+    <insert id="insertUser">
+        insert into  users(username,password,nickname,gender,enterYear,avatar,isAdmin,createdAt,updatedAt,collegeId,academyId,phone) values (#{user.username},#{user.password},#{user.nickname},#{user.gender},#{user.enterYear},#{user.avatar},0,#{user.createdAt},#{user.updatedAt},#{collegeId},#{academyId},#{user.phone});
+    </insert>
+
+
+    <!--    public String selectTokenByUsername(String username);//通过username查询token-->
+    <select id="selectTokenByUsername" resultType="String">
+        select token from users where username=#{username}
+    </select>
+
+    <!-- public void updateTokenByUsername(@Param("token")String token,@Param("username")String username);//通过username更新token-->
+    <update id="updateTokenByUsername">
+        update users set token=#{token} where username=#{username}
+    </update>
+
+    <!-- public void updateTimeByUserName(@Param("username")String username,@Param("updatedAt")Date updatedAt);//用户登录后更新一下时间-->
+    <update id="updateTimeByUserName">
+        update users set updatedAt=#{updatedAt} where username=#{username}
+    </update>
+
+    <!--   void updateTokenById(@Param("id")Integer id, @Param("token") String token); // 通过id修改token-->
+
+    <update id="updateTokenById">
+            update users set token=#{token} where id=#{id}
+    </update>
+
+    <!--    public void insertUserByRegister(@Param("username") String username,@Param("password")String password,@Param("phone")String phone,@Param("createdAtd") Date createdAtd);//插入用户-->
+    <insert id="insertUserByRegister">
+        insert into users (username,password,createdAt,updatedAt,phone) values (#{username},#{password},#{createdAt},#{updatedAt},#{phone});
+    </insert>
+
+    <update id="updateUser">
+        update users
+        <set>
+            <if test="user.nickname!=null">
+                nickname=#{user.nickname},
+            </if>
+            <if test="user.gender!=null">
+                gender=#{user.gender},
+            </if>
+            <if test="user.enterYear!=null">
+                enterYear=#{user.enterYear},
+            </if>
+            <if test="collegeId!=null">
+                collegeId=#{collegeId},
+            </if>
+            <if test="academyId!=null">
+                academyId=#{academyId},
+            </if>
+        </set>
+        where username=#{user.username}
+    </update>
+
+
+    <!--public void updateUserPasswordByUserName(@Param("username")String username,@Param("password") String password);//通过username修改密码-->
+    <update id="updateUserPasswordByUserName">
+        update users set password=#{password} where username=#{username}
+    </update>
+
+    <!--void updateAvatar(@Param("username")String username,@Param("avatar") String avatar); // 更新用户头像-->
+    <update id="updateAvatar">
+        update users set avatar=#{avatar} where username=#{username}
+    </update>
+
+    <!--void getAvatar(String username); // 获取用户头像路径-->
+    <select id="getAvatar" resultType="String">
+        select avatar from users where username=#{username}
+    </select>
+
+</mapper>

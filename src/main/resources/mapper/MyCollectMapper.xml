@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.MyCollectDao">
+
+
+    <resultMap type="MyCollectResult" id="MyCollectResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="state" column="state"/>
+        <association property="postResult" column="post_id"
+                     select="com.qmkl.dao.PostDao.getById"></association>
+    </resultMap>
+
+
+    <resultMap type="MyCollect" id="MyCollectReturn">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+
+<!--    void update(@Param("userId") Integer userId,@Param("postId")Integer postId,@Param("state")boolean state);-->
+    <update id="update">
+        update my_collect set state = #{state} where user_id =#{userId} and post_id = #{postId}
+    </update>
+
+
+    <!--void add(@Param("myCollect") MyCollect myCollect);-->
+    <insert id="add">
+        insert into my_collect (user_id,post_id,create_time,state) values (#{myCollect.userId},#{myCollect.postId},#{myCollect.createTime},#{myCollect.state});
+    </insert>
+
+    <!-- MyCollect get(@Param("userId") Integer userId,@Param("postId")Integer postId);-->
+    <select id="get" resultMap="MyCollectReturn">
+        select * from my_collect where user_id =#{userId} and post_id = #{postId}
+    </select>
+
+    <!--  List<MyCollect> listMyCollectWithPage(@Param("start")Integer start, @Param("num")Integer num, @Param("userId")Integer userId);;-->
+    <select id="listMyCollectWithPage" resultMap="MyCollectResult">
+        select * from my_collect where user_id =#{userId} and state=true order by create_time desc limit #{start},#{num}
+    </select>
+
+
+</mapper> 

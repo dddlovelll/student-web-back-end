@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.UpdateInfoDao">
+
+    <resultMap type="UpdateInfo" id="UpdateInfoResult">
+       <!-- <id property="id" column="id"/>-->
+        <result property="hasUpdate" column="has_update"/>
+        <result property="isSilent" column="is_silent"/>
+        <result property="isForce" column="is_force"/>
+        <result property="isAutoInstall" column="is_auto_install"/>
+        <result property="isIgnorable" column="is_ignorable"/>
+        <result property="versionCode" column="version_code"/>
+        <result property="versionName" column="version_name"/>
+        <result property="updateContent" column="update_content"/>
+        <result property="url" column="url"/>
+        <result property="md5" column="md5"/>
+        <result property="size" column="size"/>
+    </resultMap>
+
+    <!--UpdateInfo getLastUpdateInfo();-->
+    <select id="getLastUpdateInfo" resultMap="UpdateInfoResult">
+        select * from update_info where id = (select max(id) from update_info)
+    </select>
+</mapper> 

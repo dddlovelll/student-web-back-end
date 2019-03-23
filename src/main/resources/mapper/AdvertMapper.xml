@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.AdvertDao">
+
+    <resultMap type="Advert" id="AdvertResult">
+        <id property="id" column="id"/>
+        <result property="enabled" column="enabled"/>
+        <result property="remark" column="remark"/>
+        <result property="pic" column="pic"/>
+        <result property="url" column="url"/>
+        <result property="fallback" column="fallback"/>
+        <result property="views" column="views"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="updatedAt" column="updatedAt"/>
+        <result property="title" column="title"/>
+    </resultMap>
+
+    <!--    Advert getAdvertByRemark(String remark);  // 通过remark获取advert-->
+    <select id="getAdvertByRemark" resultMap="AdvertResult">
+          select * from ads where remark = #{remark}
+    </select>
+    <select id="getAdvertByRemarkList" resultMap="AdvertResult">
+          select * from ads where remark = #{remark}
+    </select>
+
+    <!--void  saveAdDate(@Param("ip") String ip, @Param("createdAt") Date createdAt, @Param("type") String type, @Param("remark") String remark);  // 保存访问的用户信息-->
+    <insert id="saveAdDate">
+          insert into ad_date(ip,createdAt,type,remark) values (#{ip},#{createdAt},#{type},#{remark})
+    </insert>
+</mapper> 

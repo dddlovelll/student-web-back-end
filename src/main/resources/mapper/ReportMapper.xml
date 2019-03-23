@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.ReportDao">
+
+    <resultMap type="Report" id="Report">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="content" column="content"/>
+        <result property="date" column="date"/>
+        <result property="state" column="state"/>
+    </resultMap>
+
+
+    <insert id="addReport">
+        insert into report (user_id,post_id, content,date,state) values (#{report.userId},#{report.postId},#{report.content},#{report.date},1)
+    </insert>
+
+    <select id="get" resultType="Report">
+        select * from report where user_id= #{userId} and post_id = #{postId}
+    </select>
+
+
+</mapper> 

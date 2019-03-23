@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.PrivateCommentDao">
+
+    <resultMap type="PrivateCommentResult" id="PrivateCommentResult">
+        <result property="id" column="id"/>
+        <result property="userId1" column="user_id1"/>
+        <result property="userId2" column="user_id2"/>
+        <result property="postId" column="post_id"/>
+        <result property="content" column="content"/>
+        <result property="date" column="date"/>
+        <association property="nickName1" column="user_id1"
+                     select="com.qmkl.dao.UserDao.getNickNameById"></association>
+        <association property="nickName2" column="user_id2"
+                     select="com.qmkl.dao.UserDao.getNickNameById"></association>
+    </resultMap>
+
+    <!--     void addComment(@Param("comment") Comment comment);-->
+    <insert id="addComment">
+        insert into privatecomment (user_id1,user_id2,post_id,content,date) values (#{comment.userId1},#{comment.userId2},#{comment.postId},#{comment.content},#{comment.date});
+    </insert>
+
+    <select id="getList" resultMap="PrivateCommentResult">
+        select *from privatecomment where (user_id1 = #{userId} or user_id2 = #{userId}) and post_id = #{postId} order by date
+    </select>
+
+
+</mapper>

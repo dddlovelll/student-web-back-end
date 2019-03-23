@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.CommentDao">
+
+    <resultMap type="CommentResult" id="CommentResult">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="create_time"/>
+        <association property="nickName" column="user_id"
+                     select="com.qmkl.dao.UserDao.getNickNameById"></association>
+    </resultMap>
+
+    <!--     void addComment(@Param("comment") Comment comment);-->
+    <insert id="addComment">
+        insert into comment (user_id,post_id,content,create_time) values (#{comment.userId},#{comment.postId},#{comment.content},#{comment.createTime});
+    </insert>
+
+    <!--   List<Comment> listCommentWithPage(@Param("start")Integer start, @Param("num")Integer num, @Param("postId")Integer postId);-->
+    <select id="listCommentWithPage" resultMap="CommentResult">
+        select * from  comment where post_id = #{postId} order by create_time desc limit #{start},#{num}
+    </select>
+
+    <!-- List<Comment> listCommentWithPageByUserId(@Param("start")Integer start,@Param("num")Integer num,@Param("userId")Integer userId);-->
+    <select id="listCommentWithPageByUserId" resultMap="CommentResult">
+        select * from  comment where user_id = #{userId} order by create_time desc limit #{start},#{num}
+    </select>
+
+</mapper> 

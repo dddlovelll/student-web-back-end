@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.UserAuthsDao">
+
+
+    <!--    Integer getUserIdByPlatFormIdAndPlatForm(@Param("platformId") String platformId,@Param("platform") String platform);-->
+    <select id="getUserIdByPlatFormIdAndPlatForm" resultType="Integer">
+        select UserId from userauths where platformId = #{platformId} and platform = #{platform}
+    </select>
+
+    <!--    UserAuths getUserAuthsByPlatFormIdAndPlatForm(@Param("platformId") String platformId, @Param("platform") String platform);-->
+    <select id="getUserAuthsByPlatFormIdAndPlatForm" resultType="UserAuths">
+        select * from userauths where platformId = #{platformId} and platform = #{platform}
+    </select>
+
+    <!--    void insertUserAuths(UserAuths userAuths);-->
+    <insert id="insertUserAuths">
+        insert into userauths(platform, platformId, createdAt, updatedAt) values (#{userAuths.platform}, #{userAuths.platformId}, #{userAuths.createdAt}, #{userAuths.updatedAt})
+    </insert>
+
+    <!--void updateUserAuths(@Param("userId")Integer userId,@Param("platformId") String platformId, @Param("platform") String platform);-->
+    <update id="updateUserAuths">
+        update userauths set UserId = #{userId} where platformId = #{platformId} and platform = #{platform}
+    </update>
+
+
+
+</mapper>

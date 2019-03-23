@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.AcademyDao">
+
+    <resultMap type="Academy" id="AcademyResult">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="updatedAt" column="updatedAt"/>
+        <association property="college" column="CollegeId"
+                     select="com.qmkl.dao.CollegeDao.selectCollegeById"></association>
+    </resultMap>
+
+    <!--    Integer getIdByAcademyNameAndCollegeId(@Param("academyName") String academyName,@Param("collegeId") Integer collegeId);//通过Academy名字查找id-->
+    <select id="getIdByAcademyNameAndCollegeId" resultType="Integer">
+         select id from academies where name=#{academyName} and CollegeId = #{collegeId}
+    </select>
+
+
+    <!-- public String selectAcademyNameById(Integer id);//通过id查找Academy名字-->
+    <select id="selectAcademyNameById" parameterType="Integer" resultType="String">
+        select name from academies where id=#{id}
+    </select>
+
+    <!--    public String selectIdByAcademyName(String academyName);//通过Academy名字查找id-->
+    <select id="selectIdByAcademyName" resultType="Integer">
+         select id from academies where name=#{academyName}
+    </select>
+
+
+    <!--public List<String> selectAllAcademyName();//通过查询所有的专业名称-->
+    <select id="selectAllAcademyName" resultType="String">
+        select name from  academies
+    </select>
+
+    <!-- List<String> selectAllAcademyNameByCollegeName();//通过学校查询所有的专业名称-->
+
+    <select id="selectAllAcademyNameByCollegeName" resultType="String">
+        select name from  academies where CollegeId = #{collegeId}
+    </select>
+
+    <!--     public Academy selectAcademyById(Integer id);//通过id查找Academy-->
+    <select id="selectAcademyById" parameterType="Integer" resultMap="AcademyResult">
+      select * from academies where id=#{id}
+  </select>
+
+    <!--public void insertAcademy(@Param("academy") Academy academy,@Param("collegeId") Integer collegeId);//插入Academy-->
+    <insert id="insertAcademy">
+      insert into academies values (#{academy.id},#{academy.name},#{academy.createdAt},#{academy.updatedAt},#{collegeId});
+  </insert>
+
+    <!--public void updateAcademy(@Param("academy")Academy academy,@Param("AcademyId") Integer collegeId);//更新Academy-->
+    <update id="updateAcademy">
+          update academies  set name=#{academy.name},createdAt=#{academy.createdAt},updatedAt=#{academy.updatedAt},collegeId=#{collegeId} where id=#{academy.id}
+    </update>
+
+</mapper> 

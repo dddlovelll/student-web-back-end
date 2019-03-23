@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.LikeDao">
+
+    <resultMap type="Like" id="likeResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="userId"/>
+        <result property="voteTime" column="voteTime"/>
+        <result property="fileId" column="fileId"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+
+    <!--    void addLike(Like like); // 添加记录-->
+    <insert id="addLike">
+        insert into likes (userId,voteTime,fileId,status) values (#{userId},#{voteTime},#{fileId},#{status})
+    </insert>
+
+    <!--    Like getLike(@Param("userId")Integer userId,@Param("fileId")Integer fileId); // 获取记录-->
+    <select id="getLike" resultMap="likeResult">
+        select * from likes where userId= #{userId} and fileId = #{fileId}
+    </select>
+
+    <!-- void updateLikeStatus(@Param("userId")Integer userId,@Param("fileId")Integer fileId); // 更新状态-->
+
+    <update id="updateLikeStatus">
+        update likes set status = !status where userId= #{userId} and fileId = #{fileId}
+    </update>
+
+</mapper> 

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.FileDao">
+
+    <resultMap type="Files" id="fileResult">
+        <result property="size" column="size"/>
+        <result property="spath" column="spath"/>
+    </resultMap>
+
+
+    <resultMap type="FileDetail" id="fileDetail">
+        <id property="id" column="id"/>
+        <result property="name" column="spath"/>
+        <result property="size" column="size"/>
+        <result property="createAt" column="createdAt"/>
+        <result property="updateAt" column="updatedAt"/>
+        <result property="md5" column="md5"/>
+        <result property="uid" column="uploadUserId"/>
+        <result property="likeNum" column="likeNum"/>
+        <result property="dislikeNum" column="dislikeNum"/>
+        <association property="nick" column="uploadUserId" select="com.qmkl.dao.UserDao.getUsernameById"></association>
+    </resultMap>
+
+    <!-- List<FileDetail> getListFileByMD5(String md5);-->
+    <select id="getListFileByMD5" resultMap="fileDetail">
+        select * from files where md5 = #{md5}
+    </select>
+
+
+    <!--        void saveFile(@Param("files")Files files,@Param("collegeId")Integer collegeId);-->
+    <insert id="saveFile">
+        insert into files (size, md5, ip, uploadTime, createdAt, updatedAt, uploadUserId, CollegeId, spath, likeNum, dislikeNum) values (#{files.size},#{files.md5},#{files.ip},#{files.uploadTime},#{files.createdAt},#{files.updatedAt},#{files.uploadUserId},#{collegeId},#{files.spath},0,0)
+    </insert>
+    
+
+    <!-- List<String> listFileName(String path);-->
+    <select id="listFileName" resultMap="fileResult">
+        select spath,size from files where spath  like "%"#{path}"%" and collegeId = #{collegeId}
+    </select>
+
+<!--    List<Files> listFileNamePage(@Param("path") String path, @Param("collegeId") Integer collegeId,
+    @Param("start") Integer start, @Param("end") Integer end);-->
+    <select id="listFileNamePage" resultMap="fileResult">
+        select spath,size from files where spath  like "%"#{path}"%" and collegeId = #{collegeId} limit #{start}, #{end}
+    </select>
+
+
+
+    <!--FileDetail getFile(@Param("path") String path, @Param("collegeId") Integer collegeId);-->
+    <select id="getFile" resultMap="fileDetail">
+        select id,likeNum,dislikeNum,spath,size,md5,createdAt,updatedAt,uploadUserId from files where spath = #{path} and collegeId = #{collegeId}
+    </select>
+
+    <!--    FileDetail getFileByMD5(String md5);-->
+    <select id="getFileByMD5" resultMap="fileDetail">
+        select id,likeNum,dislikeNum,spath,size,md5,createdAt,updatedAt,uploadUserId from files where md5 = #{md5}
+    </select>
+
+    <!--    FileDetail getFileBySpath(String spath);-->
+
+    <select id="getFileBySpath" resultMap="fileDetail">
+        select id,likeNum,dislikeNum,spath,size,md5,createdAt,updatedAt,uploadUserId from files where spath = #{spath}
+    </select>
+
+    <!--   FileDetail getFileByIdAndMd5(@Param("id") Integer id,@Param("md5")String md5);-->
+    <select id="getFileByIdAndMd5" resultMap="fileDetail">
+        select id,likeNum,dislikeNum,spath,size,md5,createdAt,updatedAt,uploadUserId from files where id = #{id} and md5 = #{md5}
+    </select>
+
+
+    <!--    FileDetail getFileBySpathAndMd5(@Param("spath") String spath,@Param("md5")String md5);-->
+    <select id="getFileBySpathAndMd5" resultMap="fileDetail">
+        select id,likeNum,dislikeNum,spath,size,md5,createdAt,updatedAt,uploadUserId from files where spath like "%"#{spath} and md5 = #{md5}
+    </select>
+
+
+
+    <!--void addLikeNum(Integer id);  // 增加 like-->
+    <!--void descLikeNum(Integer id);  // 减少 like-->
+    <!--void addDiskLikeNum(Integer id);  // 增加 dislike-->
+    <!--void descDisLikeNum(Integer id); // 减少 dislike-->
+
+    <update id="addLikeNum">
+        update files set likeNum = likeNum+1 where id = #{id}
+    </update>
+
+    <update id="descLikeNum">
+        update files set likeNum = likeNum-1 where id = #{id}
+    </update>
+
+
+    <update id="addDiskLikeNum">
+        update files set dislikeNum = dislikeNum+1 where id = #{id}
+    </update>
+
+    <update id="descDisLikeNum">
+        update files set dislikeNum = dislikeNum-1 where id = #{id}
+    </update>
+
+
+</mapper> 

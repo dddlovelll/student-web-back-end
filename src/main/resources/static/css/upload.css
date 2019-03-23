@@ -1,0 +1,48 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{
+    margin: 0 auto;
+    background: url(https://qmkl000.oss-cn-shenzhen.aliyuncs.com/finalexam/upload_bg.jpg) no-repeat;
+    background-size: 100%;
+}
+.fileinput-button {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.fileinput-button input{
+    position:absolute;
+    right: 0px;
+    top: 0px;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+}
+
+.select_div1{
+//用div的样式代替select的样式
+
+height: 25px;
+    border-radius: 5px;
+//盒子阴影修饰作用,自己随意
+box-shadow: 0 0 5px #ccc;
+    position: relative;
+}
+.select1{
+//清除select的边框样式
+border: none;
+//清除select聚焦时候的边框颜色
+outline: none;
+//将select的宽高等于div的宽高
+
+height: 25px;
+    line-height: 25px;
+//隐藏select的下拉图标
+appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+//通过padding-left的值让文字居中
+padding-left: 60px;
+}

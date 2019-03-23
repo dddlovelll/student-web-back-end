@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文件上传</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <link href="css/upload.css" rel="stylesheet" type="text/css"/>
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+<div class="container" style="margin-top: 8%" align="center">
+    <div class="row">
+        <div style="background-color: #1E90FF;width: 450px;height: 50px">
+            <div class="col-md-3"><img src="img/upload_yun.png" height="80px" width="50px" class="img-responsive"></div>
+            <div class="col-md-6 text-center"><p style="color: white;font-size: 20px;margin-top: 10px">后台文件上传</p></div>
+            <div class="col-md-3"></div>
+        </div>
+
+        <div style="background-color: white;width: 450px;height: 600px">
+            <br><br>
+
+            <span stytle="display: inline-block;">
+ 		 			<input type="text" name="md5" id="md5" style="margin-left: -20%" value="文件的MD5值"><p></p>
+           			 <button id="query" class="btn btn-info" style="margin-left: 42%;margin-top: -15%">查询文件</button>
+			</span>
+            <form action="/qmkl1.0.0/admin_upload" method="post" enctype="multipart/form-data">
+				<span stytle="display: inline-block;">
+ 		 			 <input type="text" id="fileName" style="margin-left: -20%" value="文件名"><p></p>
+           			 <p style="margin-left:40%;	 margin-top: -7.5%;font-size: 15px">文件名</p>
+				</span>
+                <span stytle="display: inline-block;">
+					<textarea  id="note" clos="50" rows="5" warp="virtual" style="margin-left: -20%;margin-top: 5%"></textarea>
+               		 <p style="margin-left:40%;	 margin-top: -20%;font-size: 15px">用户备注</p>
+				</span><br><br>
+                <span stytle="display: inline-block;">
+					<br>
+ 		 			 <input type="text" name="uploadUserId" id="uploadUserId" style="margin-left: -20%;margin-top: 5%" value="69">
+           		 	 <p style="margin-left: 40%;margin-top: -5%;font-size: 15px">用户ID</p>
+				</span>
+                <div align="center" style="margin-top: -5%">
+                    <br><br>
+                    <input id="uploadFileName" type="text" readonly="readonly" value=" 还未选择任何文件">
+                    <span class="btn  btn-primary fileinput-button">
+						<span>选择文件</span>
+						<input type="file" id="file" name="file">
+					</span>
+                </div><br>
+                <div align="center">
+					<span stytle="display: inline-block;">
+						<select class="select_div1 select1" id="collegeName" name="collegeName"
+                                style="width: 170px;margin-right: 20%;">
+<!--
+							 <option>福州大学</option>
+							  <option>厦门大学</option>
+							  <option>福建农林大学</option>
+-->
+						</select>
+						<p style="margin-left:40%;	 margin-top: -5%;font-size: 15px">学校</p>
+					</span>
+                    <br>
+                    <span stytle="display: inline-block;">
+						<input name= "spath" style="margin-left:-20%;font-size: 15px" >
+						<p  style="margin-left:40%;margin-top: -5%;font-size: 15px;width:30px" >路径</p>
+					</span><br>
+
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 20%;margin-right: 25%">上传</button>
+                <br><br>
+                <span th:text="${msg}" style="color: red;margin-left: -30%;margin-top: -30%"></span>
+            </form>
+            <button id="out" class="btn btn-danger" style="margin-top: -30%;margin-left: 25%">退出登录</button>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var htmlobj = $.ajax({url: "/qmkl1.0.0/college/list", async: false});
+        var dataObj = eval("(" + htmlobj.responseText + ")");
+        for (var i = 0; i < dataObj.data.length; i++) {
+            $("#collegeName").append("<option>" + dataObj.data[i] + "</option>");//设置学校
+        }
+        $("#collegeName").val("福州大学");
+        $("#out").click(function () {
+            $.ajax({url: "/qmkl1.0.0/out", async: false});
+            window.location.href = "/qmkl1.0.0/index"
+        });
+        $("#query").click(function(){
+            var queryobj = $.ajax({url: "/qmkl1.0.0/admin/get/"+$("#md5").val(), async: false});
+            var queryData = eval("(" + queryobj.responseText + ")");
+            $("#fileName").attr("value",queryData.name);
+            $("#uploadUserId").attr("value",queryData.userId);
+            $("#note").val(queryData.note);
+
+        });
+        var file = $('#file'),
+            aim = $('#em');
+        file.on('change', function (e) {
+            //e.currentTarget.files 是一个数组，如果支持多个文件，则需要遍历
+            var name = e.currentTarget.files[0].name;
+            aim.text(name);
+            //alert(name);
+            document.getElementById("uploadFileName").value = name;
+        });
+
+    });
+
+
+</script>
+</html>

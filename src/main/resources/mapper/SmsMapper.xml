@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qmkl.dao.SmsDao">
+
+    <!--public void insertSms(Sms sms);//插入sms-->
+    <insert id="insertSms" parameterType="Sms">
+        insert into sms (msg,createdAt,verCode,token,ip,phone) values (#{msg},#{createdAt},#{verCode},#{token},#{ip},#{phone});
+    </insert>
+    <!--public String selectSmsTokenCodeByPhoneAndVercode(@Param("phone")String phone,@Param("vercode")String vercode);//通过手机号和验证码查找token-->
+    <select id="selectSmsTokenCodeByPhoneAndVercode" resultType="String">
+        select token from sms where phone=#{phone} and verCode=#{vercode}
+    </select>
+
+    <!-- public void updateSmsTokenCodeByPhoneAndVercode(@Param("phone")String phone,@Param("vercode")String vercode);//通过手机号和验证码更新token使之失效-->
+    <update id="updateSmsTokenCodeByPhoneAndVercode">
+        update sms set token=#{phone} where phone=#{phone} and verCode=#{vercode}
+    </update>
+</mapper> 
